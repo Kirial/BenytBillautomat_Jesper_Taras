@@ -10,24 +10,24 @@ public class Billetautomat {
 	private int balance; // Hvor mange penge kunden p.t. har puttet i automaten
 	private int antalBilletterSolgt; // Antal billetter automaten i alt har solgt
 	private boolean montørtilstand;
-        private ArrayList<String> transaktioner = new ArrayList<String>();
+        private ArrayList<String> transaktioner = new ArrayList<>();        
+        private ArrayList<BilletTyper> billeter = new ArrayList<>();
 
-	/**
-	 * Opret en billetautomat der sælger billetter til 10 kr.
-	 */
+
+	
 	public Billetautomat() {
-		billetpris = 10;
 		balance = 0;
-		antalBilletterSolgt = 0;
+		antalBilletterSolgt = 0; 
+                billeter.add((new BilletTyper("Voksen Billet",10)));               
                 transaktioner.clear();
+                
 	}
 
 	/**
 	 * Giver prisen for en billet. 
 	 */
 	public int getBilletpris() {
-		int resultat = billetpris;                
-                return resultat;
+		return billetpris;
 	}
 
 	/**
@@ -157,17 +157,4 @@ public class Billetautomat {
             }
         }
         
-        
-    public int GetNumber(java.util.Scanner tastatur) {
-      int number = 0;
-        try {
-            number = tastatur.nextInt();
-        } catch (Exception e) {
-            System.out.println("du skal skrive et tal");
-            System.out.println(e.getMessage());
-            number = 0;
-        }
-        tastatur.nextLine();
-        return number;
-    }
 }

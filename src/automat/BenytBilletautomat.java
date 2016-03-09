@@ -28,14 +28,14 @@ public class BenytBilletautomat {
                 automat.Udskriv();
             }
 
-            valg = automat.GetNumber(tastatur);
+            valg = GetNumber(tastatur);
 
             switch (valg) {
                 case 0:
                     break;
                 case 1:
                     System.out.print("Skriv beløb: ");
-                    int beløb = automat.GetNumber(tastatur);
+                    int beløb = GetNumber(tastatur);
                     automat.indsætPenge(beløb);
                     break;
                 case 2:
@@ -65,7 +65,7 @@ public class BenytBilletautomat {
                 case 13:
                     if (automat.erMontør()) {
                         System.out.print("Skriv beløb: ");
-                        int nyPris = automat.GetNumber(tastatur);
+                        int nyPris = GetNumber(tastatur);
                         automat.setBilletpris(nyPris);
                     } else {
                         System.out.println("Afvist - log ind først");
@@ -82,5 +82,18 @@ public class BenytBilletautomat {
 
             }
         }
+    }
+    
+      public static int GetNumber(java.util.Scanner tastatur) {
+      int number = 0;
+        try {
+            number = tastatur.nextInt();
+        } catch (Exception e) {
+            System.out.println("du skal skrive et tal");
+            System.out.println(e.getMessage());
+            number = 0;
+        }
+        tastatur.nextLine();
+        return number;
     }
 }

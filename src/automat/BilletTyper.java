@@ -13,6 +13,7 @@ public class BilletTyper {
     private String type;
     private double pris; 
     private int antalS;
+    private static int antalAlle = 0;
     
     BilletTyper(String s, double p){
         type = s;

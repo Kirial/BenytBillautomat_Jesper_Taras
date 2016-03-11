@@ -11,7 +11,8 @@ public class BenytBilletautomat {
         int valg = 0;
         while (true) {
             System.out.println("-----------------------------------------------");
-            System.out.println("En billet koster " + automat.getBilletpris() + " kroner");
+            System.out.println("Se listen neden under");
+            automat.getBilletpris();
             System.out.println("Balancen er på " + automat.getBalance() + " kroner");
             System.out.println();
             System.out.println("Tast 1 for at indbetale penge");
@@ -25,6 +26,7 @@ public class BenytBilletautomat {
                 System.out.println("Tast 13 for at sætte billetpris (montør)");
                 System.out.println("Tast 14 for at logge ud af montørtilstand");
                 System.out.println("Tast 15 for at visse transaktioner");
+                System.out.println("Tast 16 for at tilføre Billet Type");
                 automat.Udskriv();
             }
 
@@ -76,6 +78,9 @@ public class BenytBilletautomat {
                         automat.montørLogin("");
                         break;
                     }
+                case 15: 
+                    
+                    break;
                 default:
                     System.out.println("Ugyldigt valg, prøv igen");
                     break;

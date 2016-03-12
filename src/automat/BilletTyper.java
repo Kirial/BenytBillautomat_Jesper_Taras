@@ -24,10 +24,10 @@ public class BilletTyper {
         antalS = 0;
         ZoneR = z;
         try {
-            FileOutputStream myFile = new FileOutputStream("BilletTypper.txt");
-            Writer BilletListe = new BufferedWriter(new OutputStreamWriter(myFile));
+            Writer myFile = new BufferedWriter(new FileWriter("BilletTypper.txt", true));
             String Str = "Navn=" + s + "¤Pris=" + p + "¤ZoneR=" + z + "¤\n";
-            BilletListe.write(Str);
+            myFile.append(Str);
+            myFile.close();
         } catch (Exception e) {
             System.out.println(e);
         }

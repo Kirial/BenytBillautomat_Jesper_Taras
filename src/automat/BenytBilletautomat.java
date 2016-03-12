@@ -29,7 +29,7 @@ public class BenytBilletautomat {
                 System.out.println("Tast 16 for at tilføre Billet Type");
                 automat.Udskriv();
             }
-
+                
             valg = GetNumber(tastatur);
 
             switch (valg) {
@@ -78,8 +78,10 @@ public class BenytBilletautomat {
                         automat.montørLogin("");
                         break;
                     }
-                case 15: 
-                    
+                case 16: 
+                        if(automat.erMontør()){
+                            automat.AddBillet();
+                        }
                     break;
                 default:
                     System.out.println("Ugyldigt valg, prøv igen");

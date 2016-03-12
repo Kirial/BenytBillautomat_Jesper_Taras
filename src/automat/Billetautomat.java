@@ -21,42 +21,77 @@ public class Billetautomat {
         balance = 0;
         antalBilletterSolgt = 0;
         try {
-
-            FileReader ReadFile = new FileReader(new File("BilletTypper.txt"));
-            BufferedReader myFile = new BufferedReader(ReadFile);
+            BufferedReader myFile = new BufferedReader(new FileReader("BilletTypper.txt"));
             String s;
             while ((s = myFile.readLine()) != null) {
-                String Navn = s.substring(s.indexOf('=')+1, s.indexOf('¤'));
-                s= s.replace(s.substring(1, (s.indexOf("¤") + 1)), " ");           
-                double thisPris = Double.parseDouble(s.substring(s.indexOf('=')+1, s.indexOf('¤')));
-                s= s.replace(s.substring(1, (s.indexOf("¤") + 1)), " ");
-                double zone = Double.parseDouble(s.substring(s.indexOf('=')+1, s.indexOf('¤')));
-                BilletTyper billet = new BilletTyper("Voksen Billet", 10, 0.9, "read");
+                String Navn = s.substring(s.indexOf('=') + 1, s.indexOf('¤'));
+                s = s.replace(s.substring(1, (s.indexOf("¤") + 1)), " ");
+                double thisPris = Double.parseDouble(s.substring(s.indexOf('=') + 1, s.indexOf('¤')));
+                s = s.replace(s.substring(1, (s.indexOf("¤") + 1)), " ");
+                double zone = Double.parseDouble(s.substring(s.indexOf('=') + 1, s.indexOf('¤')));
+                BilletTyper billet = new BilletTyper(Navn, thisPris, zone, "read");
                 billeter.add(billet);
             }
-
+            myFile.close();
         } catch (IOException | NumberFormatException f) {
 
             try {
-                File newFile = new File("BilletTypper.txt");
-                FileOutputStream myFile = new FileOutputStream(newFile);
-                Writer BilletListe = new BufferedWriter(new OutputStreamWriter(myFile));
-
+                PrintWriter myFile = new PrintWriter("BilletTypper.txt", "UTF-8"); // create file and write to file (charset utf8)
                 BilletTyper billet = new BilletTyper("Voksen Billet", 10, 0.9);
-
                 billeter.add(billet);
-                String s = "Navn=" + billet.getString() + "¤Pris=" + billet.getDouble() + "¤ZoneR=" + billet.getZoneR() + "¤\n";
-                BilletListe.write(s);
-                BilletListe.close();
+                String s = "Navn=" + billet.getString() + "¤Pris=" + billet.getDouble() + "¤ZoneR=" + billet.getZoneR() + "¤";
+                myFile.println(s);
+                myFile.close();
                 //  BilletListe.write(BilletTyper.getZoneR());
             } catch (Exception nf) {
-                System.out.println("Something is wrong \n" + nf);
+                System.out.println("Something is wrong \n" + nf.getMessage());
+
             }
-            System.out.println("Error call support"+f);
+            System.out.println("Error call support" + f);
         }
 
         transaktioner.clear();
 
+    }
+
+    public void AddBillet() {
+        if (montørtilstand) {
+            double number = 0;
+            double zoneRBT = 0;
+            String Navn;
+            System.out.println("Test navn til Billeten");
+            java.util.Scanner tastatur = new java.util.Scanner(System.in, "windows-1252");
+            Navn = tastatur.nextLine();
+            
+            for (int i = 0; i < 2; i++) {
+                if (i == 1) {
+                    System.out.println("Test Zone Rabbat");
+                } else {
+                    System.out.println("Test Pris");
+                }
+                try {
+                    zoneRBT = tastatur.nextDouble();
+                    number = number + zoneRBT;
+                } catch (Exception e) {
+                    System.out.println("du skal skrive et tal (husk ',' hvis det er ikke en heltal)");
+                    System.out.println(e.getMessage());
+                    zoneRBT = 0;
+                    i--;
+                }
+
+                tastatur.nextLine();
+
+            }
+            number = number - zoneRBT;
+
+            try {
+                BilletTyper billet = new BilletTyper(Navn, number, zoneRBT);
+                billeter.add(billet);
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+
+        }
     }
 
     /**

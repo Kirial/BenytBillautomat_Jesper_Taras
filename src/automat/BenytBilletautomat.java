@@ -10,24 +10,7 @@ public class BenytBilletautomat {
         long kortnr = 0;
         int valg = 0;
         while (true) {
-            System.out.println("-----------------------------------------------");
-            System.out.println("Se listen neden under");
-            System.out.println("Balancen er på " + automat.getBalance() + " kroner");
-            System.out.println();
-            System.out.println("Tast 1 for at indbetale penge");
-            System.out.println("Tast 2 for at udskrive din billet");
-            System.out.println("Tast 3 for at få returpengene");
-            System.out.println();
-            System.out.println("Tast 10 for at logge ind som montør");
-            if (automat.erMontør()) {
-                System.out.println("Tast 11 for at se status (montør)");
-                System.out.println("Tast 12 for at nulstille (montør)");
-                System.out.println("Tast 13 for at sætte billetpris (montør)");
-                System.out.println("Tast 14 for at logge ud af montørtilstand");
-                System.out.println("Tast 15 for at visse transaktioner");
-                System.out.println("Tast 16 for at tilføre Billet Type");
-                automat.Udskriv();
-            }
+            printMenue(automat);
 
             valg = GetNumber(tastatur);
             if (valg >= 1000000) {
@@ -58,9 +41,9 @@ public class BenytBilletautomat {
                     System.out.println("indtest password");
                     boolean RKOK = true;
                     int myPass = 0;
-                    while(RKOK){
-                        myPass =GetNumber(tastatur);
-                        if(myPass > 0){
+                    while (RKOK) {
+                        myPass = GetNumber(tastatur);
+                        if (myPass > 0) {
                             RKOK = false;
                         }
                     }
@@ -171,6 +154,29 @@ public class BenytBilletautomat {
             }
         } catch (Exception e) {
             System.out.println("Din rejse Kort findes ikke i databassen");
+        }
+    }
+
+    static void printMenue(Billetautomat automat) {
+        System.out.println("-----------------------------------------------");
+        System.out.println("Se listen neden under");
+        System.out.println("Balancen er på " + automat.getBalance() + " kroner");
+        System.out.println();
+        System.out.println("Tast 1 for at indbetale penge");
+        System.out.println("Tast 2 for at udskrive din billet");
+        System.out.println("Tast 3 for at få returpengene");
+        System.out.println("Tast 4 for at se Priser");
+        System.out.println("Tast 5 for at får en gratis rejsekort");
+        System.out.println();
+        System.out.println("Tast 10 for at logge ind som montør");
+        if (automat.erMontør()) {
+            System.out.println("Tast 11 for at se status (montør)");
+            System.out.println("Tast 12 for at nulstille (montør)");
+            System.out.println("Tast 13 for at sætte billetpris (montør)");
+            System.out.println("Tast 14 for at logge ud af montørtilstand");
+            System.out.println("Tast 15 for at visse transaktioner");
+            System.out.println("Tast 16 for at tilføre Billet Type");
+            automat.Udskriv();
         }
     }
 }

@@ -1,0 +1,1 @@
+ID=¤1¤Rejsekortnummer=¤1000000¤Navn=¤Taras Karpin¤Password=¤1234¤Saldo=¤0.0¤Status=¤true

@@ -4,14 +4,14 @@ public class BenytBilletautomat {
 
     public static void main(String[] arg) {
         Billetautomat automat = new Billetautomat();
-        java.util.Scanner tastatur = new java.util.Scanner(System.in);
+        java.util.Scanner tastatur = new java.util.Scanner(System.in, "windows-1252");
         System.out.println("BenytBilletautomat version 3");
         System.out.println();
+        long kortnr = 0;
         int valg = 0;
         while (true) {
             System.out.println("-----------------------------------------------");
             System.out.println("Se listen neden under");
-            automat.getBilletpris();
             System.out.println("Balancen er på " + automat.getBalance() + " kroner");
             System.out.println();
             System.out.println("Tast 1 for at indbetale penge");
@@ -28,9 +28,12 @@ public class BenytBilletautomat {
                 System.out.println("Tast 16 for at tilføre Billet Type");
                 automat.Udskriv();
             }
-                
-            valg = GetNumber(tastatur);
 
+            valg = GetNumber(tastatur);
+            if (valg >= 1000000) {
+                kortnr = valg;
+                valg = 7;
+            }
             switch (valg) {
                 case 0:
                     break;
@@ -45,6 +48,27 @@ public class BenytBilletautomat {
                 case 3:
                     int beløbRetur = automat.returpenge();
                     System.out.println("Du fik " + beløbRetur + " retur retur");
+                    break;
+                case 4:
+                    automat.getBilletpris();
+                    break;
+                case 5:
+                    System.out.println("indtest dit navn");
+                    String RKnavn = tastatur.nextLine();
+                    System.out.println("indtest password");
+                    boolean RKOK = true;
+                    int myPass = 0;
+                    while(RKOK){
+                        myPass =GetNumber(tastatur);
+                        if(myPass > 0){
+                            RKOK = false;
+                        }
+                    }
+                    RejseKort newRK = new RejseKort(RKnavn, myPass);
+                    newRK.getRejsekortnr();
+                    break;
+                case 7:
+                    RejsekortMenue(kortnr, tastatur);
                     break;
                 case 10:
                     System.out.print("Skriv kode: ");
@@ -77,10 +101,10 @@ public class BenytBilletautomat {
                         automat.montørLogin("");
                         break;
                     }
-                case 16: 
-                        if(automat.erMontør()){
-                            automat.AddBillet();
-                        }
+                case 16:
+                    if (automat.erMontør()) {
+                        automat.AddBillet();
+                    }
                     break;
                 default:
                     System.out.println("Ugyldigt valg, prøv igen");
@@ -89,9 +113,9 @@ public class BenytBilletautomat {
             }
         }
     }
-    
-      public static int GetNumber(java.util.Scanner tastatur) {
-      int number = 0;
+
+    public static int GetNumber(java.util.Scanner tastatur) {
+        int number = 0;
         try {
             number = tastatur.nextInt();
         } catch (Exception e) {
@@ -101,5 +125,52 @@ public class BenytBilletautomat {
         }
         tastatur.nextLine();
         return number;
+    }
+
+    public static void RejsekortMenue(long d, java.util.Scanner tastatur) {
+        try {
+            RejseKort RK = new RejseKort(d);
+            boolean user = true;
+            int myValg = 0;
+            int Pass;
+            System.out.println("Password");
+            Pass = GetNumber(tastatur);
+            if (!(RK.confPass(Pass))) {
+                user = false;
+            }
+            while (user) {
+                RK.printManual();
+                myValg = GetNumber(tastatur);
+                switch (myValg) {
+                    case 1:
+                        System.out.println("din Saldo er på " + RK.getSaldo() + " kr");
+
+                        break;
+                    case 2:
+                        System.out.println("Skriv beløb(min 50 kr)");
+                        int thisBeløb = GetNumber(tastatur);
+                        double nyBeløb = (RK.getSaldo()) + thisBeløb;
+                        if (nyBeløb > 50 || nyBeløb % 50 == 0) {
+                            RK.Money(nyBeløb);
+                        } else {
+                            System.out.println("Error");
+                        }
+                        break;
+                    case 3:
+                        System.out.println("Skriv en ny Password");
+                        int gPass = GetNumber(tastatur);
+                        System.out.println("Skriv en ny Password");
+                        int nyPass = GetNumber(tastatur);
+                        RK.changePass(gPass, nyPass);
+                        break;
+                    case 4:
+                        System.out.println("Du er logget UD");
+                        user = false;
+                        break;
+                }
+            }
+        } catch (Exception e) {
+            System.out.println("Din rejse Kort findes ikke i databassen");
+        }
     }
 }

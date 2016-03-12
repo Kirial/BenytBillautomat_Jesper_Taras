@@ -20,17 +20,16 @@ public class RejseKort {
     private long RejsekortNummer = 0;
     private String[] DocLine;
 
-    RejseKort(long RK) {
+    RejseKort(long RKnr) {
         boolean found = false;
         try {
-            BufferedReader myFile = new BufferedReader(new FileReader("RejseKortListe.txt"));
+            BufferedReader myFile = new BufferedReader(new FileReader("RejsekortListe.txt"));
             String str;
-            String temp = RK + "";
+            String temp = RKnr + "";
 
             while ((str = myFile.readLine()) != null) {
                 DocLine = str.split("¤");
-
-                if (DocLine[3].equals(temp)) {
+                if ((DocLine[3]).equals(temp)) {
                     found = true;
                     break;
                 }
@@ -38,12 +37,11 @@ public class RejseKort {
             myFile.close();
 
             if (!found) {
-                System.out.println("test");
                 throw new IllegalArgumentException();
             } else {
                 try {
                     ID = Integer.parseInt(DocLine[1]);
-                    RejsekortNummer = RK;
+                    RejsekortNummer = RKnr;
                     navn = DocLine[5];
                     password = Integer.parseInt(DocLine[7]);
                     konto = Double.parseDouble(DocLine[9]);
@@ -54,15 +52,14 @@ public class RejseKort {
 
             }
         } catch (Exception e) {
-            System.out.println(e.getMessage());
             throw new IllegalArgumentException();
         }
 
     }
 
-    RejseKort(String s, int p, int k) {
+    RejseKort(String s, int p) {
         try {
-            BufferedReader myFile = new BufferedReader(new FileReader("RejseKortListe.txt"));
+            BufferedReader myFile = new BufferedReader(new FileReader("RejsekortListe.txt"));
             String str;
             String line = "";
             while ((str = myFile.readLine()) != null) {
@@ -95,13 +92,14 @@ public class RejseKort {
 
     public void Money(double d) {
         try {
-            FileOutputStream myFile = new FileOutputStream("RejseKortListe.txt");
+            FileOutputStream myFile = new FileOutputStream("RejsekortListe.txt");
             DocLine[9] = d + "";
             String temp = "";
             for (int i = 0; i <= 9; i++) {
-                temp = temp + DocLine[i];
+                temp = temp + DocLine[i]+"¤";
             }
             myFile.write(temp.getBytes());
+            konto = konto + d;
         } catch (Exception e) {
             System.out.println(e.getMessage());
         }
@@ -126,22 +124,34 @@ public class RejseKort {
         return false;
     }
 
-    public boolean changePass(int p) {
+    public void changePass(int p, int np) {
         if (p == password) {
             try {
-                FileOutputStream myFile = new FileOutputStream("RejseKortListe.txt");
-                DocLine[7] = p + "";
+                FileOutputStream myFile = new FileOutputStream("RejsekortListe.txt");
+                DocLine[7] = np + "";
                 String temp = "";
                 for (int i = 0; i <= 9; i++) {
-                    temp = temp + DocLine[i];
+                    temp = temp + DocLine[i]+"¤";
                 }
                 myFile.write(temp.getBytes());
             } catch (Exception e) {
                 System.out.println(e.getMessage());
-                return false;
+                System.out.println("Error");
             }
-            return true;
+            System.out.println("Din password er skiftet");
+        }else{
+            System.out.println("Din password matcher ikke med din gamle password");
         }
-        return false;
+    }
+
+    public void printManual() {
+        System.out.println("hey "+getName());
+        System.out.println("Tryk 1 for at se saldo");
+        System.out.println("Tryk 2 for at tanke op");
+        System.out.println("Tryk 3 for at Skifte password");
+        System.out.println("Tryk 4 for at logge ud");
+    }
+    public void getRejsekortnr(){
+        System.out.println("Dit kortNR er "+RejsekortNummer);
     }
 }

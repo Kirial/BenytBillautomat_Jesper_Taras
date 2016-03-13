@@ -42,7 +42,7 @@ public class Billetautomat {
                 PrintWriter myFile = new PrintWriter("BilletTypper.txt", "UTF-8"); // create file and write to file (charset utf8)
                 BilletTyper billet = new BilletTyper("Voksen Billet", 10, 0.9, 1);
                 billeter.add(billet);
-                String s = "Navn=¤" + billet.getString() + "¤Pris=¤" + billet.getDouble() + "¤ZoneR=¤" + billet.getZoneR() + "¤";
+                String s = "Navn=¤" + billet.getString() + "¤Pris=¤" + billet.getDouble() + "¤ZoneR=¤" + billet.getZoneR() + "¤ID="+billet.getID();
                 myFile.println(s);
                 myFile.close();
                 //  BilletListe.write(BilletTyper.getZoneR());
@@ -111,7 +111,7 @@ public class Billetautomat {
             int l = (b.getString()).length();
             int PrintID= b.getID();
             System.out.print(PrintID);
-            while (PrintID < 1000) {
+            while (PrintID < 100) {
                 System.out.print(" ");
                 PrintID = PrintID*10;
             }
@@ -147,7 +147,7 @@ public class Billetautomat {
     /**
      * Udskriv en billet. Opdater total og nedskriv balancen med billetprisen
      */
-    public void udskrivBillet(int antalZoner, String BilletType, long l) {
+    public void udskrivBillet(int antalZoner, int thisID, long l) {
         BilletTyper tempB = null;
         String RKJN = "Nej";
         double nyPris = 0;
@@ -156,7 +156,7 @@ public class Billetautomat {
         String[] info = {""};
 
         for (BilletTyper b : billeter) {
-            if (BilletType.equals(b.getString())) {
+            if (thisID == b.getID()) {
                 tempB = b;
                 nyPris = b.getDouble();
                 billetFindes = true;
@@ -200,7 +200,7 @@ public class Billetautomat {
         System.out.println("#                     #");
         System.out.println("#        Zone " + antalZoner + "       #");
 
-        System.out.print("#  " + BilletType + "");
+        System.out.print("#  " + tempB.getString()+ "");
         space(nyPris);
         System.out.println("        #");
 

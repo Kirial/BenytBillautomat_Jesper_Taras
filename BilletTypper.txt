@@ -1,2 +1,1 @@
-﻿Navn=¤Vokesn¤Pris=¤10.0¤ZoneR=¤0.9¤
-Navn=¤Børne Billet¤Pris=¤8.0¤ZoneR=¤0.89¤
+ID=¤1¤Navn=¤Voksen Billet¤Pris=¤10.0¤ZoneR=¤0.9¤AntalSoldt=¤0

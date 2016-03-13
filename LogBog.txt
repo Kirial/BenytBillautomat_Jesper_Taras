@@ -1,0 +1,2 @@
+13/03-2016 12:10:24 Brugeren Har KøbtVoksen Billet Pris=10.0 RejseKortNej
+13/03-2016 12:12:38 Brugeren Har KøbtVoksen Billet Pris=50.0 RejseKortNej

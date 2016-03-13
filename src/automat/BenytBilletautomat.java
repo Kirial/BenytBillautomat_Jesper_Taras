@@ -22,27 +22,34 @@ public class BenytBilletautomat {
                     break;
                 case 1:
                     System.out.print("Skriv beløb: ");
-                    int beløb = GetNumber(tastatur);
+                    double beløb = GetDouble(tastatur);
                     automat.indsætPenge(beløb);
                     break;
                 case 2:
-                    long thisRejseKort  = 0;
-                    System.out.println(" KøbBillet Med rejseKort(j/n)");
+                    long thisRejseKort = 0;
+                    System.out.println("KøbBillet Med rejseKort(j/n)");
                     String købInfo = tastatur.nextLine();
-                    if(købInfo.equals("j")){
+                    if (købInfo.equals("j")) {
                         System.out.println("Indtast din rejseKortNR");
                         thisRejseKort = GetNumber(tastatur);
                     }
                     System.out.println("Vælg Type (tryk ind deres id)");
-                    
-                  //  automat.udskrivBillet();
+                    if (thisRejseKort > 1000000) {
+                        automat.getBilletpris(0.85);
+                    } else {
+                        automat.getBilletpris(1);
+                    }
+                    int billetID = GetNumber(tastatur);
+                    System.out.println("Skriv antal Zoner");
+                    int købantalZoner = GetNumber(tastatur);
+                    automat.udskrivBillet(købantalZoner, billetID, thisRejseKort);
                     break;
                 case 3:
                     double beløbRetur = automat.returpenge();
                     System.out.println("Du fik " + beløbRetur + " retur retur");
                     break;
                 case 4:
-                    automat.getBilletpris();
+                    automat.getBilletpris(1);
                     break;
                 case 5:
                     System.out.println("indtest dit navn");
@@ -67,19 +74,11 @@ public class BenytBilletautomat {
                     String kode = tastatur.next();
                     automat.montørLogin(kode);
                     break;
-                case 11:
-                    if (automat.erMontør()) {
-                        System.out.println("Antal billetter solgt: " + automat.getAntalBilletterSolgt());
-                        System.out.println("Total indkomst: " + automat.getTotal() + " kr");
-                    } else {
-                        System.out.println("Afvist - log ind først");
-                    }
-                    break;
                 case 13:
                     if (automat.erMontør()) {
                         System.out.print("Skriv beløb: ");
                         int nyPris = GetNumber(tastatur);
-                    //    automat.setBilletpris(nyPris);
+                        //    automat.setBilletpris(nyPris);
                     } else {
                         System.out.println("Afvist - log ind først");
                     }
@@ -106,6 +105,19 @@ public class BenytBilletautomat {
         int number = 0;
         try {
             number = tastatur.nextInt();
+        } catch (Exception e) {
+            System.out.println("du skal skrive et tal");
+            System.out.println(e.getMessage());
+            number = 0;
+        }
+        tastatur.nextLine();
+        return number;
+    }
+
+    public static double GetDouble(java.util.Scanner tastatur) {
+        double number = 0;
+        try {
+            number = tastatur.nextDouble();
         } catch (Exception e) {
             System.out.println("du skal skrive et tal");
             System.out.println(e.getMessage());

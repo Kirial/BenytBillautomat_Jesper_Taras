@@ -12,14 +12,16 @@ import java.io.*;
  * @author Family
  */
 public class BilletTyper {
-    private int ID;
-    private String type;
-    private double pris;
-    private int antalS;
-    private double ZoneR;
-    private static int lastID;
-    BilletTyper(String s, double p, double z,int i) {
-        lastID = ID+1;
+
+    private int ID;  // billet id 
+    private String type; // navn til billetten 
+    private double pris; // pris 
+    private double antalS; // anatal af soldte billeter 
+    private double ZoneR; // ronne rabbat (fra 0.8 til 1)
+    private static int lastID; // sidste leddig id 
+
+    BilletTyper(String s, double p, double z, int i) { // denne constructo kør hvis da oprettes ny billet 
+        lastID = ID + 1;
         ID = i;
         type = s;
         pris = p;
@@ -27,7 +29,7 @@ public class BilletTyper {
         ZoneR = z;
         try {
             Writer myFile = new BufferedWriter(new FileWriter("BilletTypper.txt", true));
-            String Str = "\nNavn=¤" + s + "¤Pris=¤" + p + "¤ZoneR=¤" + z + "¤"+"¤antalS=¤"+antalS+"¤ID=¤"+ID;
+            String Str = "ID=¤" + i + "¤Navn=¤" + s + "¤Pris=¤" + p + "¤ZoneR=¤" + z + "¤AntalSoldt=¤0";
             myFile.append(Str);
             myFile.close();
         } catch (Exception e) {
@@ -35,12 +37,13 @@ public class BilletTyper {
         }
     }
 
-    BilletTyper(String s, double p, double z,int i, String str) {
-        lastID = ID+1;
+    // denne Kunstructor kør kun i starten af programmet når alle billeter indllæsses ind i programmet
+    BilletTyper(String s, double p, double z, int i, int antal, String str) {
+        lastID = ID + 1;
         ID = i;
         type = s;
         pris = p;
-        antalS = 0;
+        antalS = antal;
         ZoneR = z;
     }
 
@@ -52,28 +55,45 @@ public class BilletTyper {
         return pris;
     }
 
-    public int getAntalS() {
+    public double getAntalS() {
         return antalS;
     }
 
     public double getZoneR() {
         return ZoneR;
     }
-    public int getID(){
-     return ID;
+
+    public int getID() {
+        return ID;
     }
-    public int getLastID(){
+
+    public int getLastID() {
         return lastID;
     }
 
-    public void addAntal(int i) {
+    public void addAntal(double i) {
         antalS = i;
+        update();
     }
-    public void changeZoner(double d){
+
+    public void changeZoner(double d) {
         ZoneR = d;
+        update();
     }
-    
-    public void changePris(double d){
-        pris = d; 
+
+    public void changePris(double d) {
+        pris = d;
+        update();
+    }
+
+    private void update() {
+        try {
+            FileOutputStream myFile = new FileOutputStream("BilletTypper.txt");
+            String thisStr = "ID=¤" + ID + "¤Navn=¤" + type + "¤Pris=¤" + pris + "¤ZoneR=¤" + ZoneR + "¤AntalSoldt=¤0";
+            myFile.write(thisStr.getBytes());
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+            System.out.println("Error");
+        }
     }
 }

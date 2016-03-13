@@ -79,7 +79,7 @@ public class RejseKort {
         navn = s;
         password = p;
         konto = 0;
-        String indsæt = "ID=¤" + ID + "¤Rejsekortnummer=¤" + RejsekortNummer + "¤Navn=¤" + navn + "¤Password=¤" + password + "¤Saldo=¤" + konto;
+        String indsæt = "\nID=¤" + ID + "¤Rejsekortnummer=¤" + RejsekortNummer + "¤Navn=¤" + navn + "¤Password=¤" + password + "¤Saldo=¤" + konto;
         try {
             Writer myFile = new BufferedWriter(new FileWriter("RejsekortListe.txt", true));
             myFile.append(indsæt);

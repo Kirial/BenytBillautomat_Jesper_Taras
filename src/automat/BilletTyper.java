@@ -12,20 +12,22 @@ import java.io.*;
  * @author Family
  */
 public class BilletTyper {
-
+    private int ID;
     private String type;
     private double pris;
     private int antalS;
     private double ZoneR;
-
-    BilletTyper(String s, double p, double z) {
+    private static int lastID;
+    BilletTyper(String s, double p, double z,int i) {
+        lastID = ID+1;
+        ID = i;
         type = s;
         pris = p;
         antalS = 0;
         ZoneR = z;
         try {
             Writer myFile = new BufferedWriter(new FileWriter("BilletTypper.txt", true));
-            String Str = "Navn=" + s + "¤Pris=" + p + "¤ZoneR=" + z + "¤\n";
+            String Str = "\nNavn=¤" + s + "¤Pris=¤" + p + "¤ZoneR=¤" + z + "¤"+"¤antalS=¤"+antalS+"¤ID=¤"+ID;
             myFile.append(Str);
             myFile.close();
         } catch (Exception e) {
@@ -33,7 +35,9 @@ public class BilletTyper {
         }
     }
 
-    BilletTyper(String s, double p, double z, String str) {
+    BilletTyper(String s, double p, double z,int i, String str) {
+        lastID = ID+1;
+        ID = i;
         type = s;
         pris = p;
         antalS = 0;
@@ -55,8 +59,21 @@ public class BilletTyper {
     public double getZoneR() {
         return ZoneR;
     }
+    public int getID(){
+     return ID;
+    }
+    public int getLastID(){
+        return lastID;
+    }
 
     public void addAntal(int i) {
         antalS = i;
+    }
+    public void changeZoner(double d){
+        ZoneR = d;
+    }
+    
+    public void changePris(double d){
+        pris = d; 
     }
 }

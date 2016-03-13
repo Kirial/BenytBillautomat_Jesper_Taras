@@ -26,10 +26,19 @@ public class BenytBilletautomat {
                     automat.indsætPenge(beløb);
                     break;
                 case 2:
-                    automat.udskrivBillet();
+                    long thisRejseKort  = 0;
+                    System.out.println(" KøbBillet Med rejseKort(j/n)");
+                    String købInfo = tastatur.nextLine();
+                    if(købInfo.equals("j")){
+                        System.out.println("Indtast din rejseKortNR");
+                        thisRejseKort = GetNumber(tastatur);
+                    }
+                    System.out.println("Vælg Type (tryk ind deres id)");
+                    
+                  //  automat.udskrivBillet();
                     break;
                 case 3:
-                    int beløbRetur = automat.returpenge();
+                    double beløbRetur = automat.returpenge();
                     System.out.println("Du fik " + beløbRetur + " retur retur");
                     break;
                 case 4:
@@ -66,15 +75,11 @@ public class BenytBilletautomat {
                         System.out.println("Afvist - log ind først");
                     }
                     break;
-
-                case 12:
-                    automat.nulstil();
-                    break;
                 case 13:
                     if (automat.erMontør()) {
                         System.out.print("Skriv beløb: ");
                         int nyPris = GetNumber(tastatur);
-                        automat.setBilletpris(nyPris);
+                    //    automat.setBilletpris(nyPris);
                     } else {
                         System.out.println("Afvist - log ind først");
                     }
@@ -120,6 +125,7 @@ public class BenytBilletautomat {
             Pass = GetNumber(tastatur);
             if (!(RK.confPass(Pass))) {
                 user = false;
+                System.out.println("Rpøv Igen");
             }
             while (user) {
                 RK.printManual();
@@ -140,7 +146,7 @@ public class BenytBilletautomat {
                         }
                         break;
                     case 3:
-                        System.out.println("Skriv en ny Password");
+                        System.out.println("Skriv din gamle Password");
                         int gPass = GetNumber(tastatur);
                         System.out.println("Skriv en ny Password");
                         int nyPass = GetNumber(tastatur);
@@ -163,7 +169,7 @@ public class BenytBilletautomat {
         System.out.println("Balancen er på " + automat.getBalance() + " kroner");
         System.out.println();
         System.out.println("Tast 1 for at indbetale penge");
-        System.out.println("Tast 2 for at udskrive din billet");
+        System.out.println("Tast 2 for at købe Billeten");
         System.out.println("Tast 3 for at få returpengene");
         System.out.println("Tast 4 for at se Priser");
         System.out.println("Tast 5 for at får en gratis rejsekort");

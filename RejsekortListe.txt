@@ -1,0 +1,5 @@
+﻿ID=¤1¤Rejsekortnummer=¤1000000¤Navn=¤Taras Karpin¤Password=¤1234¤Saldo=¤50.0¤
+ID=¤2¤Rejsekortnummer=¤1000001¤Navn=¤Test 01¤Password=¤1256¤Saldo=¤0.0
+ID=¤3¤Rejsekortnummer=¤1000002¤Navn=¤test 02¤Password=¤1234¤Saldo=¤0.0
+ID=¤4¤Rejsekortnummer=¤1000003¤Navn=¤test 03¤Password=¤1234¤Saldo=¤0.0
+ID=¤5¤Rejsekortnummer=¤1000004¤Navn=¤test 05¤Password=¤1545¤Saldo=¤0.0

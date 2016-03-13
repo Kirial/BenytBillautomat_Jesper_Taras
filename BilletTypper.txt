@@ -1,1 +1,2 @@
-﻿Navn=Vokesn¤Pris=10.0¤ZoneR=0.9¤
+﻿Navn=¤Vokesn¤Pris=¤10.0¤ZoneR=¤0.9¤
+Navn=¤Børne Billet¤Pris=¤8.0¤ZoneR=¤0.89¤

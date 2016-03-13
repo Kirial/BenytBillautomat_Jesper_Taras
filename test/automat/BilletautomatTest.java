@@ -35,6 +35,7 @@ public class BilletautomatTest {
     /**
      * Test of indsætPenge method, of class Billetautomat.
      */
+    /*
     @Test
     public void testIndsætPenge() {
         System.out.println("inds\u00e6tPenge");

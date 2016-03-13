@@ -11,7 +11,7 @@ import java.text.SimpleDateFormat;// tips fra stackoverflow
 public class Billetautomat {
 
     private int billetpris;    // Prisen for én billet.
-    private int balance; // Hvor mange penge kunden p.t. har puttet i automaten
+    private double balance; // Hvor mange penge kunden p.t. har puttet i automaten
     private int antalBilletterSolgt; // Antal billetter automaten i alt har solgt
     private boolean montørtilstand;
     private ArrayList<String> transaktioner = new ArrayList<>();
@@ -23,13 +23,16 @@ public class Billetautomat {
         try {
             BufferedReader myFile = new BufferedReader(new FileReader("BilletTypper.txt"));
             String s;
+            String[] arraySTR = {""};
             while ((s = myFile.readLine()) != null) {
-                String Navn = s.substring(s.indexOf('=') + 1, s.indexOf('¤'));
-                s = s.replace(s.substring(1, (s.indexOf("¤") + 1)), " ");
-                double thisPris = Double.parseDouble(s.substring(s.indexOf('=') + 1, s.indexOf('¤')));
-                s = s.replace(s.substring(1, (s.indexOf("¤") + 1)), " ");
-                double zone = Double.parseDouble(s.substring(s.indexOf('=') + 1, s.indexOf('¤')));
-                BilletTyper billet = new BilletTyper(Navn, thisPris, zone, "read");
+                arraySTR = s.split("¤");
+                String Navn = arraySTR[1];
+                double thisPris = Double.parseDouble(arraySTR[3]);
+                double zone = Double.parseDouble(arraySTR[5]);
+                int myAntalS = Integer.parseInt(arraySTR[7]);
+                int id = Integer.parseInt(arraySTR[9]);
+                BilletTyper billet = new BilletTyper(Navn, thisPris, zone, id, "read");
+                billet.addAntal(myAntalS);
                 billeter.add(billet);
             }
             myFile.close();
@@ -37,9 +40,9 @@ public class Billetautomat {
 
             try {
                 PrintWriter myFile = new PrintWriter("BilletTypper.txt", "UTF-8"); // create file and write to file (charset utf8)
-                BilletTyper billet = new BilletTyper("Voksen Billet", 10, 0.9);
+                BilletTyper billet = new BilletTyper("Voksen Billet", 10, 0.9, 1);
                 billeter.add(billet);
-                String s = "Navn=" + billet.getString() + "¤Pris=" + billet.getDouble() + "¤ZoneR=" + billet.getZoneR() + "¤";
+                String s = "Navn=¤" + billet.getString() + "¤Pris=¤" + billet.getDouble() + "¤ZoneR=¤" + billet.getZoneR() + "¤";
                 myFile.println(s);
                 myFile.close();
                 //  BilletListe.write(BilletTyper.getZoneR());
@@ -62,7 +65,7 @@ public class Billetautomat {
             System.out.println("Test navn til Billeten");
             java.util.Scanner tastatur = new java.util.Scanner(System.in, "windows-1252");
             Navn = tastatur.nextLine();
-            
+
             for (int i = 0; i < 2; i++) {
                 if (i == 1) {
                     System.out.println("Test Zone Rabbat");
@@ -85,7 +88,8 @@ public class Billetautomat {
             number = number - zoneRBT;
 
             try {
-                BilletTyper billet = new BilletTyper(Navn, number, zoneRBT);
+                BilletTyper billet = null;
+                billet = new BilletTyper(Navn, number, zoneRBT, billet.getLastID());
                 billeter.add(billet);
             } catch (Exception e) {
                 System.out.println(e.getMessage());
@@ -98,8 +102,28 @@ public class Billetautomat {
      * Giver prisen for en billet.
      */
     public void getBilletpris() {
+        System.out.print("ID Type                ");
+        for (int i = 2; i < 10; i++) {
+            System.out.print("Zone " + i + "   ");
+        }
+        System.out.println("");
         for (BilletTyper b : billeter) {
-            System.out.println(b.getString() + " " + b.getDouble());
+            int l = (b.getString()).length();
+            int PrintID= b.getID();
+            System.out.print(PrintID);
+            while (PrintID < 1000) {
+                System.out.print(" ");
+                PrintID = PrintID*10;
+            }
+            System.out.print(b.getString());
+            while (l <= 15) {
+                System.out.print(" ");
+                l++;
+            }
+            for (int i = 2; i < 10; i++) {
+                System.out.print("     " + (roundUP(b.getDouble() * b.getZoneR() * i)));
+            }
+            System.out.println(" ");
         }
     }
 
@@ -108,49 +132,104 @@ public class Billetautomat {
      */
     public void indsætPenge(int beløb) {
         balance = balance + beløb;
-        transaktioner.add((new SimpleDateFormat("dd/MM-yyyy HH:mm:ss").format(new Date())) + " Brugeren har kastet ind " + beløb + " kr");
+        String temp = ((new SimpleDateFormat("dd/MM-yyyy HH:mm:ss").format(new Date())) + " Brugeren har kastet ind " + beløb + " kr");
+
+        logbog(temp);
     }
 
     /**
      * Giver balancen (beløbet maskinen har modtaget til den næste billet).
      */
-    public int getBalance() {
+    public double getBalance() {
         return balance;
     }
 
     /**
      * Udskriv en billet. Opdater total og nedskriv balancen med billetprisen
      */
-    public void udskrivBillet() {
-        transaktioner.add((new SimpleDateFormat("dd/MM-yyyy HH:mm:ss").format(new Date())) + " Brugeren har udskrevet billet");
-        if (balance < billetpris) {
+    public void udskrivBillet(int antalZoner, String BilletType, long l) {
+        BilletTyper tempB = null;
+        String RKJN = "Nej";
+        double nyPris = 0;
+        boolean billetFindes = false;
+        double Saldo = balance;
+        String[] info = {""};
+
+        for (BilletTyper b : billeter) {
+            if (BilletType.equals(b.getString())) {
+                tempB = b;
+                nyPris = b.getDouble();
+                billetFindes = true;
+            }
+        }
+        if (!billetFindes) {
+            return;
+        }
+        if (l > 1000000) {
+            RKJN = "Ja";
+            nyPris = nyPris * 0.85;
+            nyPris = roundUP(nyPris);
+            try {
+                BufferedReader myFile = new BufferedReader(new FileReader("RejsekortListe.txt"));
+                String tempStr = "";
+                while ((tempStr = myFile.readLine()) != null) {
+                    info = tempStr.split("¤");
+                    String tempL = l + "";
+                    if (tempL.equals(info[3])) {
+                        if (balance > 0) {
+                            returpenge();
+                        }
+                        Saldo = Double.parseDouble(info[9]);
+                        break;
+                    }
+                }
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+            }
+        }
+
+        if (Saldo < (nyPris)) {
             System.out.println("Du mangler at indbetale nogle penge");
             return;
         }
+
         System.out.println("##########B##T#########");
         System.out.println("# BlueJ Trafikselskab #");
         System.out.println("#                     #");
         System.out.println("#        Billet       #");
+        System.out.println("#                     #");
+        System.out.println("#        Zone " + antalZoner + "       #");
 
-        System.out.print("#        ");
-        space(billetpris);
+        System.out.print("#  " + BilletType + "");
+        space(nyPris);
         System.out.println("        #");
 
         System.out.println("#                     #");
         System.out.println("##########B##T#########");
+        Saldo = Saldo - nyPris;
+        if (l > 1000000) {
 
-        System.out.print("#Du har ");
-        space(balance - billetpris);
-        System.out.println(" til gode#");
-
-        System.out.println("##########B##T#########");
-        System.out.println();
-
-        antalBilletterSolgt = antalBilletterSolgt + 1;
-        balance = balance - billetpris; // Billetter koster 10 kroner
+            try {
+                FileOutputStream myFile = new FileOutputStream("RejsekortListe.txt");
+                info[9] = Saldo + "";
+                String temp = "";
+                for (int i = 0; i <= 9; i++) {
+                    temp = temp + info[i] + "¤";
+                }
+                myFile.write(temp.getBytes());
+            } catch (Exception e) {
+                System.out.println(e.getMessage());
+                System.out.println("Error");
+            }
+        } else {
+            balance = Saldo;
+        }
+        String S = (new SimpleDateFormat("dd/MM-yyyy HH:mm:ss").format(new Date())) + " Brugeren Har Købt";
+        S = S + tempB.getString() + " Pris=" + nyPris + " RejseKort" + RKJN;
+        logbog(S);
     }
 
-    public void space(int tal) {
+    public void space(double tal) {
         if (tal < 10) {
             System.out.print(tal + " kr ");
         } else if (tal < 100) {
@@ -160,10 +239,11 @@ public class Billetautomat {
         }
     }
 
-    public int returpenge() {
-        int returbeløb = balance;
+    public double returpenge() {
+        double returbeløb = balance;
         balance = 0;
-        transaktioner.add((new SimpleDateFormat("dd/MM-yyyy HH:mm:ss").format(new Date())) + " Brugeren fik " + returbeløb + " kr tilbage");
+        String logS = (new SimpleDateFormat("dd/MM-yyyy HH:mm:ss").format(new Date())) + " Brugeren fik " + returbeløb + " kr tilbage";
+        logbog(logS);
         System.out.println("Du får " + returbeløb + " kr retur");
         return returbeløb;
     }
@@ -197,23 +277,39 @@ public class Billetautomat {
         }
     }
 
-    public void setBilletpris(int billetpris) {
-        this.billetpris = billetpris;
-    }
-
-    public void nulstil() {
-        if (montørtilstand) {
-            antalBilletterSolgt = 0;
-        } else {
-            System.out.println("Afvist - log ind først");
+    public void setBilletpris(int billetPris, String BilletType) {
+        BilletTyper billet = null;
+        for (BilletTyper b : billeter) {
+            if ((b.getString()).equals(BilletType)) {
+                billet = b;
+                break;
+            }
+        }
+        try {
+            FileOutputStream myFile = new FileOutputStream("RejsekortListe.txt");
+            String temp = "\nNavn=¤" + BilletType + "¤Pris=¤" + billetPris + "¤ZoneR=¤" + billet.getZoneR() + "¤" + "¤antalS=¤" + billet.getAntalS();;
+            myFile.write(temp.getBytes());
+            billet.changePris(billetPris);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 
-    public void setAntalBilletterSolgt(int antalBilletterSolgt) {
-        if (montørtilstand) {
-            this.antalBilletterSolgt = antalBilletterSolgt;
-        } else {
-            System.out.println("Afvist - log ind først");
+    public void changeZoneR(int ZoneRbt, String BilletType) {
+        BilletTyper billet = null;
+        for (BilletTyper b : billeter) {
+            if ((b.getString()).equals(BilletType)) {
+                billet = b;
+                break;
+            }
+        }
+        try {
+            FileOutputStream myFile = new FileOutputStream("RejsekortListe.txt");
+            String temp = "\nNavn=¤" + BilletType + "¤Pris=¤" + billet.getDouble() + "¤ZoneR=¤" + ZoneRbt + "¤" + "¤antalS=¤" + billet.getAntalS();;
+            myFile.write(temp.getBytes());
+            billet.changeZoner(ZoneRbt);
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
         }
     }
 
@@ -227,4 +323,26 @@ public class Billetautomat {
         }
     }
 
+    private double roundUP(double d) {
+        int temp = (int) d;
+        double rest = d - temp;
+        if (rest < 0.25) {
+            rest = 0;
+        } else if (rest < 0.75) {
+            rest = 0.5;
+        } else {
+            rest = 1;
+        }
+        return (rest + temp);
+    }
+
+    private void logbog(String s) {
+        try {
+            Writer myFile = new BufferedWriter(new FileWriter("LogBog.txt", true));
+            myFile.append(s + "\n");
+            myFile.close();
+        } catch (Exception e) {
+            System.out.println(e);
+        }
+    }
 }
